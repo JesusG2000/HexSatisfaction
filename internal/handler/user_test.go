@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -20,7 +21,6 @@ import (
 
 const (
 	user         = "user"
-	slash        = "/"
 	login        = "login"
 	registration = "registration"
 	api          = "api"
@@ -48,7 +48,7 @@ func TestUser_Login(t *testing.T) {
 	tt := []test{
 		{
 			name:   "invalid login",
-			path:   slash + user + slash + login,
+			path:   fmt.Sprintf("/%s/%s", user, login),
 			method: http.MethodPost,
 			req: model.LoginUserRequest{
 				Login:    "",
@@ -63,7 +63,7 @@ func TestUser_Login(t *testing.T) {
 		},
 		{
 			name:   "find err",
-			path:   slash + user + slash + login,
+			path:   fmt.Sprintf("/%s/%s", user, login),
 			method: http.MethodPost,
 			req: model.LoginUserRequest{
 				Login:    "test",
@@ -77,7 +77,7 @@ func TestUser_Login(t *testing.T) {
 		},
 		{
 			name:   "no user",
-			path:   slash + user + slash + login,
+			path:   fmt.Sprintf("/%s/%s", user, login),
 			method: http.MethodPost,
 			req: model.LoginUserRequest{
 				Login:    "test",
@@ -92,7 +92,7 @@ func TestUser_Login(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + user + slash + login,
+			path:   fmt.Sprintf("/%s/%s", user, login),
 			method: http.MethodPost,
 			req: model.LoginUserRequest{
 				Login:    "test",
@@ -152,7 +152,7 @@ func TestUser_Registration(t *testing.T) {
 	tt := []test{
 		{
 			name:   "bad login",
-			path:   slash + user + slash + registration,
+			path:   fmt.Sprintf("/%s/%s", user, registration),
 			method: http.MethodPost,
 			req: model.RegisterUserRequest{
 				Login:    "",
@@ -167,7 +167,7 @@ func TestUser_Registration(t *testing.T) {
 		},
 		{
 			name:   "exist error",
-			path:   slash + user + slash + registration,
+			path:   fmt.Sprintf("/%s/%s", user, registration),
 			method: http.MethodPost,
 			req: model.RegisterUserRequest{
 				Login:    "test",
@@ -181,7 +181,7 @@ func TestUser_Registration(t *testing.T) {
 		},
 		{
 			name:   "existed user",
-			path:   slash + user + slash + registration,
+			path:   fmt.Sprintf("/%s/%s", user, registration),
 			method: http.MethodPost,
 			req: model.RegisterUserRequest{
 				Login:    "test",
@@ -196,7 +196,7 @@ func TestUser_Registration(t *testing.T) {
 		},
 		{
 			name:   "create error",
-			path:   slash + user + slash + registration,
+			path:   fmt.Sprintf("/%s/%s", user, registration),
 			method: http.MethodPost,
 			req: model.RegisterUserRequest{
 				Login:    "test",
@@ -212,7 +212,7 @@ func TestUser_Registration(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + user + slash + registration,
+			path:   fmt.Sprintf("/%s/%s", user, registration),
 			method: http.MethodPost,
 			req: model.RegisterUserRequest{
 				Login:    "test",
@@ -278,7 +278,7 @@ func TestUserRole_FindAll(t *testing.T) {
 
 		{
 			name:   "find error",
-			path:   slash + user + slash + api + slash + getAll,
+			path:   fmt.Sprintf("/%s/%s/%s", user, api, getAll),
 			method: http.MethodGet,
 			fn: func(userRoleService *m.UserRole, data test) {
 				userRoleService.On("FindAllUser").
@@ -288,7 +288,7 @@ func TestUserRole_FindAll(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + user + slash + api + slash + getAll,
+			path:    fmt.Sprintf("/%s/%s/%s", user, api, getAll),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(userRoleService *m.UserRole, data test) {

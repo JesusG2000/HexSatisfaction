@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -39,7 +40,7 @@ func TestAuthor_Create(t *testing.T) {
 	tt := []test{
 		{
 			name:   "invalid user id",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodPost,
 			req: model.CreateAuthorRequest{
 				Name:        "some",
@@ -56,7 +57,7 @@ func TestAuthor_Create(t *testing.T) {
 		},
 		{
 			name:   "create err",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodPost,
 			req: model.CreateAuthorRequest{
 				Name:        "some",
@@ -72,7 +73,7 @@ func TestAuthor_Create(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodPost,
 			req: model.CreateAuthorRequest{
 				Name:        "some",
@@ -139,7 +140,7 @@ func TestAuthor_Update(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid user id",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateAuthorRequest{
@@ -158,7 +159,7 @@ func TestAuthor_Update(t *testing.T) {
 		},
 		{
 			name:    "update err",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateAuthorRequest{
@@ -176,7 +177,7 @@ func TestAuthor_Update(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodPut,
 			req: model.UpdateAuthorRequest{
 				ID:          1,
@@ -193,7 +194,7 @@ func TestAuthor_Update(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateAuthorRequest{
@@ -225,7 +226,7 @@ func TestAuthor_Update(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -264,7 +265,7 @@ func TestAuthor_Delete(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid user id",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteAuthorRequest{
@@ -279,7 +280,7 @@ func TestAuthor_Delete(t *testing.T) {
 		},
 		{
 			name:    "delete err",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteAuthorRequest{
@@ -293,7 +294,7 @@ func TestAuthor_Delete(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodDelete,
 			req: model.DeleteAuthorRequest{
 				ID: 1,
@@ -306,7 +307,7 @@ func TestAuthor_Delete(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteAuthorRequest{
@@ -330,7 +331,7 @@ func TestAuthor_Delete(t *testing.T) {
 				tc.fn(author, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -371,7 +372,7 @@ func TestAuthor_FindByID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid user id",
-			path:        slash + author + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", author, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDAuthorRequest{
@@ -386,7 +387,7 @@ func TestAuthor_FindByID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + author + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", author, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDAuthorRequest{
@@ -400,7 +401,7 @@ func TestAuthor_FindByID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", author, api),
 			method: http.MethodGet,
 			req: model.IDAuthorRequest{
 				ID: 1,
@@ -413,7 +414,7 @@ func TestAuthor_FindByID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", author, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.IDAuthorRequest{
@@ -444,7 +445,7 @@ func TestAuthor_FindByID(t *testing.T) {
 				tc.fn(author, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -492,7 +493,7 @@ func TestAuthor_FindByUserID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid user id",
-			path:        slash + author + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", author, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDAuthorRequest{
@@ -507,7 +508,7 @@ func TestAuthor_FindByUserID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + author + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", author, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDAuthorRequest{
@@ -521,7 +522,7 @@ func TestAuthor_FindByUserID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash + api + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", author, api, user),
 			method: http.MethodGet,
 			req: model.UserIDAuthorRequest{
 				ID: 1,
@@ -534,7 +535,7 @@ func TestAuthor_FindByUserID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash + api + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", author, api, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDAuthorRequest{
@@ -565,7 +566,7 @@ func TestAuthor_FindByUserID(t *testing.T) {
 				tc.fn(author, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -611,7 +612,7 @@ func TestAuthor_FindByName(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + author + slash,
+			path:        fmt.Sprintf("/%s/", author),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.NameAuthorRequest{
@@ -625,7 +626,7 @@ func TestAuthor_FindByName(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash,
+			path:   fmt.Sprintf("/%s/", author),
 			method: http.MethodGet,
 			req: model.NameAuthorRequest{
 				Name: "some",
@@ -638,7 +639,7 @@ func TestAuthor_FindByName(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash,
+			path:    fmt.Sprintf("/%s/", author),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.NameAuthorRequest{
@@ -671,7 +672,7 @@ func TestAuthor_FindByName(t *testing.T) {
 				tc.fn(author, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.Name, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.Name), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -714,7 +715,7 @@ func TestAuthor_FindAll(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + author + slash,
+			path:        fmt.Sprintf("/%s/", author),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			fn: func(authorService *m.Author, data test) {
@@ -725,7 +726,7 @@ func TestAuthor_FindAll(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + author + slash,
+			path:   fmt.Sprintf("/%s/", author),
 			method: http.MethodGet,
 			fn: func(authorService *m.Author, data test) {
 				authorService.On("FindAll").
@@ -735,7 +736,7 @@ func TestAuthor_FindAll(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + author + slash,
+			path:    fmt.Sprintf("/%s/", author),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(authorService *m.Author, data test) {
